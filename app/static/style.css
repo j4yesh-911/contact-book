@@ -1,7 +1,225 @@
-body {
-    font-family: Arial;
-    padding: 20px;
+/* ===============================
+   FONT
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
+
+/* ===============================
+   DARK BACKGROUND + ANIMATION
+================================ */
+body {
+    background: #0b0b0e;
+    color: #e5e7eb;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated glowing background */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.25), transparent 60%);
+    filter: blur(80px);
+    z-index: -1;
+    animation: floatGlow 10s infinite alternate ease-in-out;
+}
+
+body::after {
+    right: 0;
+    bottom: 0;
+    animation-delay: 3s;
+}
+
+@keyframes floatGlow {
+    from { transform: translateY(-40px); }
+    to { transform: translateY(40px); }
+}
+
+/* ===============================
+   MAIN CARD (Works for all pages)
+================================ */
+.app,
+.auth-card {
+    width: 420px;
+    padding: 32px;
+    border-radius: 18px;
+    background: rgba(18, 18, 24, 0.8);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 0 0.5px rgba(255,255,255,0.2);
+    animation: fadeUp 0.6s ease;
+}
+
+/* Title */
+.title,
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 26px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ===============================
+   INPUTS
+================================ */
 input {
-    margin: 5px;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #0f0f14;
+    color: #fff;
+    outline: none;
+    margin-bottom: 14px;
+    transition: all 0.25s ease;
+}
+
+input::placeholder {
+    color: #6b7280;
+}
+
+input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
+    background: #111118;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(124,58,237,0.4);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ===============================
+   CONTACT FORM
+================================ */
+.contact-form {
+    margin-bottom: 20px;
+}
+
+/* ===============================
+   CONTACT LIST
+================================ */
+.contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #0f0f14;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.25s ease;
+}
+
+.contact-list li:hover {
+    transform: translateX(6px);
+    border-color: rgba(124,58,237,0.5);
+    background: #12121a;
+}
+
+/* Contact Info */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-weight: 500;
+}
+
+.phone {
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+/* ===============================
+   DELETE BUTTON
+================================ */
+.delete-btn {
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+    transition: all 0.25s ease;
+}
+
+.delete-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* ===============================
+   AUTH LINKS
+================================ */
+.auth-link {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.auth-link a {
+    color: #7c3aed;
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+/* ===============================
+   ANIMATIONS
+================================ */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

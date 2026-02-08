@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<form method="post">
-    <input name="email" placeholder="Email">
-    <input name="password" type="password" placeholder="Password">
-    <button>Login</button>
-</form>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <form method="post">
+            <input name="email" placeholder="Email">
+            <input name="password" type="password" placeholder="Password">
+            <button>Login</button>
+        </form>
+        <p class="auth-link">
+            Don't have an account? <a href="/register">Register</a>
+        </p>
+    </div>
+</div>
+
 {% endblock %}

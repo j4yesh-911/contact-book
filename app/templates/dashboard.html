@@ -1,19 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Contacts</h2>
 
-<form method="post" action="/add">
-    <input name="name" placeholder="Name">
-    <input name="phone" placeholder="Phone">
-    <input name="email" placeholder="Email">
-    <button>Add</button>
-</form>
+<div class="app">
+    <h2 class="title">Contact Book</h2>
 
-<ul>
-{% for c in contacts %}
-    <li>{{ c.name }} - {{ c.phone }}
-        <a href="/delete/{{ c.id }}">Delete</a>
-    </li>
-{% endfor %}
-</ul>
+    <form method="post" action="/add" class="contact-form">
+        <input name="name" placeholder="Name">
+        <input name="phone" placeholder="Phone">
+        <input name="email" placeholder="Email">
+        <button>Add Contact</button>
+    </form>
+
+    <ul class="contact-list">
+    {% for c in contacts %}
+        <li>
+            <div class="contact-info">
+                <span class="name">{{ c.name }}</span>
+                <span class="phone">{{ c.phone }}</span>
+            </div>
+            <a href="/delete/{{ c.id }}" class="delete-btn">Delete</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
 {% endblock %}
