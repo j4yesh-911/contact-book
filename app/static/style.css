@@ -11,36 +11,86 @@
 }
 
 /* ===============================
-   DARK BACKGROUND + ANIMATION
+   THEME VARIABLES
+================================ */
+:root,
+body.theme-dark {
+    --bg-body: #0b0b0e;
+    --bg-card: rgba(18, 18, 24, 0.8);
+    --bg-input: #0f0f14;
+    --bg-input-focus: #111118;
+    --text: #e5e7eb;
+    --text-muted: #9ca3af;
+    --border: rgba(255,255,255,0.06);
+    --border-input: rgba(255,255,255,0.08);
+    --accent: #7c3aed;
+    --accent-dark: #5b21b6;
+    --glow: rgba(124,58,237,0.25);
+    --nav-bg: rgba(12,12,18,0.95);
+    --shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+body.theme-light {
+    --bg-body: #f0f2f5;
+    --bg-card: rgba(255,255,255,0.95);
+    --bg-input: #fff;
+    --bg-input-focus: #f8f9fa;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --border: rgba(0,0,0,0.08);
+    --border-input: rgba(0,0,0,0.12);
+    --accent: #7c3aed;
+    --accent-dark: #5b21b6;
+    --glow: rgba(124,58,237,0.2);
+    --nav-bg: rgba(255,255,255,0.98);
+    --shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+/* ===============================
+   BODY + LAYOUT
 ================================ */
 body {
-    background: #0b0b0e;
-    color: #e5e7eb;
+    background: var(--bg-body);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     overflow-x: hidden;
     position: relative;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Animated glowing background */
-body::before,
-body::after {
+body.theme-dark::before,
+body.theme-dark::after {
     content: "";
     position: fixed;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(124,58,237,0.25), transparent 60%);
+    background: radial-gradient(circle, var(--glow), transparent 60%);
     filter: blur(80px);
     z-index: -1;
     animation: floatGlow 10s infinite alternate ease-in-out;
 }
 
-body::after {
+body.theme-dark::after {
     right: 0;
     bottom: 0;
     animation-delay: 3s;
+}
+
+body.theme-light::before,
+body.theme-light::after {
+    display: none;
+}
+
+.main-content {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px 40px;
 }
 
 @keyframes floatGlow {
@@ -49,29 +99,185 @@ body::after {
 }
 
 /* ===============================
-   MAIN CARD (Works for all pages)
+   NAVBAR
+================================ */
+.navbar {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.nav-brand {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+}
+
+.nav-brand:hover {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--accent);
+    background: rgba(124,58,237,0.1);
+}
+
+.nav-logout {
+    color: #ef4444;
+}
+
+.nav-logout:hover {
+    color: #fff;
+    background: rgba(239,68,68,0.2);
+}
+
+.theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    background: rgba(124,58,237,0.1);
+}
+
+.theme-icon {
+    font-size: 1.2rem;
+}
+
+body.theme-dark .theme-icon.sun {
+    display: none;
+}
+
+body.theme-dark .theme-icon.moon {
+    display: inline;
+}
+
+body.theme-light .theme-icon.sun {
+    display: inline;
+}
+
+body.theme-light .theme-icon.moon {
+    display: none;
+}
+
+/* ===============================
+   FLASH MESSAGES
+================================ */
+.flash-wrap {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 90%;
+}
+
+.flash {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    animation: fadeUp 0.4s ease;
+}
+
+.flash-success {
+    background: rgba(34,197,94,0.2);
+    color: #22c55e;
+    border: 1px solid rgba(34,197,94,0.4);
+}
+
+.flash-error {
+    background: rgba(239,68,68,0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.4);
+}
+
+/* ===============================
+   MAIN CARD
 ================================ */
 .app,
 .auth-card {
-    width: 420px;
+    width: 100%;
+    max-width: 480px;
     padding: 32px;
     border-radius: 18px;
-    background: rgba(18, 18, 24, 0.8);
+    background: var(--bg-card);
     backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow:
-        0 20px 60px rgba(0,0,0,0.7),
-        inset 0 0 0.5px rgba(255,255,255,0.2);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow), inset 0 0 0.1px rgba(255,255,255,0.1);
     animation: fadeUp 0.6s ease;
 }
 
-/* Title */
+.dashboard-app {
+    max-width: 520px;
+}
+
 .title,
 .auth-card h2 {
     text-align: center;
     margin-bottom: 26px;
     font-weight: 600;
     letter-spacing: 0.5px;
+}
+
+.form-mode {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+/* ===============================
+   SEARCH
+================================ */
+.search-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.search-btn {
+    width: auto;
+    padding: 12px 20px;
 }
 
 /* ===============================
@@ -81,22 +287,22 @@ input {
     width: 100%;
     padding: 12px 14px;
     border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: #0f0f14;
-    color: #fff;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input);
+    color: var(--text);
     outline: none;
     margin-bottom: 14px;
     transition: all 0.25s ease;
 }
 
 input::placeholder {
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 input:focus {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
-    background: #111118;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--glow);
+    background: var(--bg-input-focus);
 }
 
 /* ===============================
@@ -107,7 +313,7 @@ button {
     padding: 12px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     color: white;
     font-weight: 600;
     cursor: pointer;
@@ -121,6 +327,32 @@ button:hover {
 
 button:active {
     transform: scale(0.98);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-actions button {
+    flex: 1;
+}
+
+.btn-cancel {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: var(--bg-input);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-input);
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* ===============================
@@ -142,25 +374,25 @@ button:active {
 
 .contact-list li {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 12px;
     border-radius: 10px;
-    background: #0f0f14;
-    border: 1px solid rgba(255,255,255,0.05);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
     transition: all 0.25s ease;
 }
 
 .contact-list li:hover {
     transform: translateX(6px);
     border-color: rgba(124,58,237,0.5);
-    background: #12121a;
 }
 
-/* Contact Info */
 .contact-info {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 0;
 }
 
 .name {
@@ -169,12 +401,48 @@ button:active {
 
 .phone {
     font-size: 13px;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
-/* ===============================
-   DELETE BUTTON
-================================ */
+.favorite-btn {
+    font-size: 1.25rem;
+    padding: 4px;
+    line-height: 1;
+    text-decoration: none;
+    opacity: 0.5;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.favorite-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.favorite-btn.is-favorite {
+    opacity: 1;
+}
+
+.contact-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn {
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(124,58,237,0.15);
+    color: var(--accent);
+    transition: all 0.25s ease;
+}
+
+.edit-btn:hover {
+    background: var(--accent);
+    color: white;
+    transform: scale(1.05);
+}
+
 .delete-btn {
     text-decoration: none;
     font-size: 12px;
@@ -192,17 +460,50 @@ button:active {
 }
 
 /* ===============================
+   PAGINATION
+================================ */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.page-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--bg-input);
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--border-input);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background: rgba(124,58,237,0.15);
+    border-color: var(--accent);
+}
+
+.page-info {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ===============================
    AUTH LINKS
 ================================ */
 .auth-link {
     margin-top: 14px;
     font-size: 14px;
-    color: #9ca3af;
+    color: var(--text-muted);
     text-align: center;
 }
 
 .auth-link a {
-    color: #7c3aed;
+    color: var(--accent);
     text-decoration: none;
 }
 

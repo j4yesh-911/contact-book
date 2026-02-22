@@ -1,10 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Contact Book</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Contact Book{% endblock %}</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-    {% block content %}{% endblock %}
+<body class="theme-dark" id="theme-body">
+    {% if current_user.is_authenticated %}
+    <nav class="navbar">
+        <a href="{{ url_for('contacts.dashboard') }}" class="nav-brand">Contact Book</a>
+        <div class="nav-links">
+            <a href="{{ url_for('contacts.dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('contacts.dashboard', favorites=1) }}" class="nav-link">Favorites</a>
+            <button type="button" class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link nav-logout">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-wrap">
+            {% for category, msg in messages %}
+            <div class="flash flash-{{ category }}">{{ msg }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        (function() {
+            var stored = localStorage.getItem('contactbook-theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = stored === 'dark' || (stored !== 'light' && prefersDark);
+            document.getElementById('theme-body').classList.toggle('theme-dark', isDark);
+            document.getElementById('theme-body').classList.toggle('theme-light', !isDark);
+            var btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    var body = document.getElementById('theme-body');
+                    var dark = body.classList.toggle('theme-dark');
+                    body.classList.toggle('theme-light', !dark);
+                    localStorage.setItem('contactbook-theme', dark ? 'dark' : 'light');
+                });
+            }
+        })();
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

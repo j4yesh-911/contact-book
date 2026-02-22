@@ -1,27 +1,63 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="app">
+<div class="app dashboard-app">
     <h2 class="title">Contact Book</h2>
 
-    <form method="post" action="/add" class="contact-form">
-        <input name="name" placeholder="Name">
-        <input name="phone" placeholder="Phone">
-        <input name="email" placeholder="Email">
-        <button>Add Contact</button>
+    <form method="get" action="{{ url_for('contacts.dashboard') }}" class="search-form">
+        <input type="search" name="q" value="{{ search }}" placeholder="Search by name..." class="search-input" aria-label="Search contacts">
+        <input type="hidden" name="favorites" value="{{ '1' if favorites_filter else '' }}">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    <form method="post" action="{{ url_for('contacts.add') if not edit_contact else url_for('contacts.edit', id=edit_contact.id) }}" class="contact-form" id="contact-form">
+        {% if edit_contact %}
+        <input type="hidden" name="q" value="{{ search }}">
+        <input type="hidden" name="page" value="{{ pagination.page if pagination else 1 }}">
+        <input type="hidden" name="favorites" value="{{ '1' if favorites_filter else '' }}">
+        <p class="form-mode">Editing: {{ edit_contact.name }}</p>
+        {% endif %}
+        <input name="name" placeholder="Name" required value="{{ edit_contact.name if edit_contact else '' }}">
+        <input name="phone" type="tel" placeholder="Phone (10 digits)" required
+               pattern="[0-9]{10}" maxlength="10" minlength="10" inputmode="numeric"
+               value="{{ edit_contact.phone if edit_contact else '' }}">
+        <input name="email" type="email" placeholder="Email" value="{{ edit_contact.email or '' if edit_contact else '' }}">
+        <div class="form-actions">
+            <button type="submit">{{ 'Update Contact' if edit_contact else 'Add Contact' }}</button>
+            {% if edit_contact %}
+            <a href="{{ url_for('contacts.dashboard', q=search, page=pagination.page if pagination else 1, favorites='1' if favorites_filter else '') }}" class="btn-cancel">Cancel</a>
+            {% endif %}
+        </div>
     </form>
 
     <ul class="contact-list">
     {% for c in contacts %}
         <li>
+            <a href="{{ url_for('contacts.favorite', id=c.id) }}" class="favorite-btn {{ 'is-favorite' if c.is_favorite else '' }}" title="{{ 'Remove from favorites' if c.is_favorite else 'Mark as favorite' }}" aria-label="Toggle favorite">⭐</a>
             <div class="contact-info">
                 <span class="name">{{ c.name }}</span>
                 <span class="phone">{{ c.phone }}</span>
             </div>
-            <a href="/delete/{{ c.id }}" class="delete-btn">Delete</a>
+            <div class="contact-actions">
+                <a href="{{ url_for('contacts.dashboard', edit=c.id, q=search, page=pagination.page if pagination else 1, favorites='1' if favorites_filter else '') }}" class="edit-btn">Edit</a>
+                <a href="{{ url_for('contacts.delete', id=c.id) }}" class="delete-btn" onclick="return confirm('Delete this contact?');">Delete</a>
+            </div>
         </li>
     {% endfor %}
     </ul>
+
+    {% if pagination and pagination.pages > 1 %}
+    <nav class="pagination" aria-label="Contacts pagination">
+        {% set base_args = {'q': search, 'favorites': '1' if favorites_filter else ''} %}
+        {% if pagination.has_prev %}
+        <a href="{{ url_for('contacts.dashboard', page=pagination.prev_num, **base_args) }}" class="page-link">Previous</a>
+        {% endif %}
+        <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+        {% if pagination.has_next %}
+        <a href="{{ url_for('contacts.dashboard', page=pagination.next_num, **base_args) }}" class="page-link">Next</a>
+        {% endif %}
+    </nav>
+    {% endif %}
 </div>
 
 {% endblock %}

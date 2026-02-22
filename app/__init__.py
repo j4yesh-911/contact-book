@@ -19,5 +19,12 @@ def create_app() -> Flask:
 
     with app.app_context():
         db.create_all()
+        # Add is_favorite column if missing (existing databases)
+        try:
+            with db.engine.connect() as conn:
+                conn.execute(db.text("ALTER TABLE contact ADD COLUMN is_favorite BOOLEAN DEFAULT 0"))
+                conn.commit()
+        except Exception:
+            pass
 
     return app

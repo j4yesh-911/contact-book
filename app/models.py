@@ -13,6 +13,7 @@ class Contact(db.Model):
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(120))
+    is_favorite = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 @login_manager.user_loader
